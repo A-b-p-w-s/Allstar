@@ -78,10 +78,27 @@ def convert_dicom_to_png(dicom_path, output_folder,masek_folder_path):
         # edges = cv2.resize(edges, (CT_w, CT_h), interpolation=cv2.INTER_AREA)
         
         png_file = png_file[first_vertical2:last_vertical2, first_horizontal2:last_horizontal2]
+        
+        gray_mask = (png_file[:,:,0] == png_file[:,:,1]) & (png_file[:,:,1] == png_file[:,:,2])
+
+        # # 将灰度部分的像素设置为黑色，非灰度部分保持不变
+        png_file[gray_mask] = [0, 0, 0]
         png_file = cv2.resize(png_file, (CT_w, CT_h), interpolation=cv2.INTER_AREA)
+    
         
+        # unique_elements, counts = np.unique(png_file[:,:,0], return_counts=True)
+
+        # # 将结果存储在字典中
+        # counts_dict = dict(zip(unique_elements, counts))
+        # print(counts_dict)
         
-        edges[edges > 0]=255
+        # cv2.imshow('png_file',png_file)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+        
+        # edges[edges > 0]=255
+        
+
         
         
         l_w = first_horizontal
@@ -94,18 +111,25 @@ def convert_dicom_to_png(dicom_path, output_folder,masek_folder_path):
 
         png_file = cv2.copyMakeBorder(png_file, t_h, b_h, l_w, r_w, cv2.BORDER_CONSTANT, value=[0, 0, 0])
         
-        gray_mask = (png_file[:,:,0] == png_file[:,:,1]) & (png_file[:,:,1] == png_file[:,:,2])
+        # gray_mask = (png_file[:,:,0] == png_file[:,:,1]) & (png_file[:,:,1] == png_file[:,:,2])
 
-        # 将灰度部分的像素设置为黑色，非灰度部分保持不变
-        png_file[gray_mask] = [0, 0, 0]
+        # # 将灰度部分的像素设置为黑色，非灰度部分保持不变
+        # png_file[gray_mask] = [0, 0, 0]
         
-        print(png_file.shape)
+        # print(png_file.shape)
         
-        cv2.imshow('png_file',png_file)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.imshow('png_file',png_file)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
         
-
+        # 将numpy数组转换为PIL图像
+        img = Image.fromarray(png_file.astype(np.uint8))
+        
+        # 构建输出文件的路径
+        output_file = os.path.join(dicom_path, f'ct_{i}' + '.png')
+        
+        # 保存为PNG格式
+        img.save(output_file)
        
         i+=1
         

@@ -32,27 +32,28 @@ def save_dcm_as_png(dcm_folder, output_folder,png_floder):
     # 按切片顺序（InstanceNumber 或 SliceLocation）排序
     dicom_data.sort(key=lambda x: x[1])
 
-    # 遍历排序后的 DICOM 文件并保存为 PNG
+    # 读取 PNG 文件并保存为 DICOM 文件
     for i, (ds, _) in enumerate(dicom_data):
         png_file = cv2.imread(os.path.join(png_floder, f"ct_{i+1}.png"))
-        
-        rows = ds.Rows
-        columns = ds.Columns
+        png_file = cv2.cvtColor(png_file, cv2.COLOR_BGR2GRAY)
+        png_file[png_file>0]=1
+    
         # 获取图像的色彩类型和位深（假设是灰度图）
         bits_allocated = ds.BitsAllocated
 
         # 创建一个新的黑色图像（灰度图像，全黑）
         if bits_allocated == 16:
-            black_image = np.zeros((rows, columns), dtype=np.uint16)  # 16位图像
+            black_image = np.array(png_file).astype(np.uint16)
         else:
-            black_image = np.zeros((rows, columns), dtype=np.uint8)  # 8位图像
-
+            black_image = np.array(png_file).astype(np.uint8)
+         
+        
         # 创建新的 DICOM 数据集
         new_ds = ds.copy()
 
         # 替换 PixelData为全黑的图像
         new_ds.PixelData = black_image.tobytes()
-
+        
         # 确保其他元数据正确
         new_ds.InstanceNumber = i + 1  # 保证切片的顺序
 
@@ -64,7 +65,7 @@ def save_dcm_as_png(dcm_folder, output_folder,png_floder):
         
 # 使用示例
 dcm_folder = r'C:\Users\allstar\Desktop\aaaa\DICOM (2)\nii\SE5'  # DICOM 文件夹路径
-output_folder = r'C:\Users\allstar\Desktop\aaaa\new_dcm'  # 输出文件夹路径
-png_floder = r'C:\Users\allstar\Desktop\aaaa\dicom_png'
+output_folder = r'C:\Users\allstar\Desktop\aaaa\fg\dcm'  # 输出文件夹路径
+png_floder = r'C:\Users\allstar\Desktop\aaaa\fg\png' #图片
 
-save_dcm_as_png(dcm_folder, output_folder,png_floder,png_floder)
+save_dcm_as_png(dcm_folder, output_folder,png_floder)

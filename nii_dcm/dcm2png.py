@@ -110,7 +110,7 @@ def save_dcm_as_png(dcm_folder, output_folder):
         img = Image.fromarray(img_array_normalized)
 
         # 保存为 PNG 文件
-        output_path = os.path.join(output_folder, f"IM_{i+1}.png")
+        output_path = os.path.join(output_folder, f"ct_{i+1}.png")
         img.save(output_path)
         print(f"保存 {output_path}")
 
@@ -119,3 +119,4 @@ dcm_folder = r'C:\Users\allstar\Desktop\aaaa\DICOM (2)\nii\SE5'  # DICOM 文件�
 output_folder = r'C:\Users\allstar\Desktop\aaaa\ct_png'  # 输出文件夹路径
 
 save_dcm_as_png(dcm_folder, output_folder)
+
