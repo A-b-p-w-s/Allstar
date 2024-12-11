@@ -6,8 +6,9 @@ if __name__ == '__main__':
     
     folder_path = r'C:\Users\allstar\Desktop\aaaa\dicom_png'
     output_folder = r'C:\Users\allstar\Desktop\aaaa\fg\png'
-        # 遍历文件夹
-    for i in range(44):
+    
+    # 遍历文件夹
+    for i in range(len(os.listdir(folder_path))):
         # 检查文件名是否以.png结尾
         # 构建完整的文件路径
         file_path = os.path.join(folder_path, f'ct_{i+1}.png')
