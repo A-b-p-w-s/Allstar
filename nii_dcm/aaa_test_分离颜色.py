@@ -11,7 +11,7 @@ if __name__ == '__main__':
         # 检查文件名是否以.png结尾
         # 构建完整的文件路径
         file_path = os.path.join(folder_path, f'ct_{i+1}.png')
-        # 读取图像
+        # 读取图像·
         img = cv2.imread(file_path) 
         # 将图像转换为HSV颜色空间
         hsv_image = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -35,7 +35,7 @@ if __name__ == '__main__':
         output_path = os.path.join(output_folder, f"ct_{i+1}.png")
         # 保存结果
         cv2.imwrite(output_path, brown_region)
-    print('ok')
+    print('====ok=====')
 
         # # 显示结果
         # cv2.imshow("Brown Region", brown_region)
