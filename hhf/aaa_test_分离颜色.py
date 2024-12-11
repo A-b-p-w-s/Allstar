@@ -5,7 +5,7 @@ import os
 if __name__ == '__main__':
     
     folder_path = r'C:\Users\allstar\Desktop\aaaa\dicom_png'
-    output_folder = r'C:\Users\allstar\Desktop\aaaa\fg\png'
+    output_folder = r'C:\Users\allstar\Desktop\aaaa\fg\png_y'
     
     # 遍历文件夹
     for i in range(len(os.listdir(folder_path))):
@@ -20,8 +20,11 @@ if __name__ == '__main__':
         # lower = np.array([10, 100, 20])   # 棕色的低阈值
         # upper = np.array([25, 255, 200])  # 棕色的高阈值
         
-        lower = np.array([120, 50, 50])  # 紫色的低阈值
-        upper = np.array([160, 255, 255])  # 紫色的高阈值
+        # lower = np.array([120, 50, 50])  # 紫色的低阈值
+        # upper = np.array([160, 255, 255])  # 紫色的高阈值
+        
+        lower = np.array([20, 60, 60])  # 黄色的低阈值
+        upper = np.array([40, 255, 255])  # 黄色的高阈值
 
         # 创建掩码，提取棕色区域
         mask = cv2.inRange(hsv_image, lower, upper)

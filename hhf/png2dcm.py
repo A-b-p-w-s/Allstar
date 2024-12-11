@@ -65,7 +65,7 @@ def save_dcm_as_png(dcm_folder, output_folder,png_floder):
         
 # 使用示例
 dcm_folder = r'C:\Users\allstar\Desktop\aaaa\DICOM (2)\nii\SE5'  # DICOM 文件夹路径
-output_folder = r'C:\Users\allstar\Desktop\aaaa\fg\dcm'  # 输出文件夹路径
-png_floder = r'C:\Users\allstar\Desktop\aaaa\fg\png' #图片
+output_folder = r'C:\Users\allstar\Desktop\aaaa\fg\dcm_y'  # 输出文件夹路径
+png_floder = r'C:\Users\allstar\Desktop\aaaa\fg\png_y' #图片
 
 save_dcm_as_png(dcm_folder, output_folder,png_floder)
