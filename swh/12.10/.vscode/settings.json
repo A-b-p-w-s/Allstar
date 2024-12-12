@@ -1,0 +1,6 @@
+{
+    "editor.fontSize": 20,
+    "window.zoomLevel": 1,
+    "python.analysis.autoImportCompletions": true,
+    "editor.suggest.snippetsPreventQuickSuggestions": false
+}
