@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-
+import torchvision.transforms.functional as TF
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -14,7 +14,7 @@ from torch.utils.tensorboard import SummaryWriter
 import torchvision.transforms.functional as F
 
 import os
-
+from tqdm import tqdm
 from GRFBUNet import *
 # from model import *
 from newDataset import *
@@ -62,7 +62,7 @@ class SequentialRotationTransform:
     def __call__(self, img):
         angle = self.angles[self.index]
         self.index = (self.index + 1) % len(self.angles)  # 依次循环使用角度
-        return F.rotate(img, angle)
+        return TF.rotate(img, angle)
 
 # 定义 x 和 y 的 transform
 x_transform = transforms.Compose([
@@ -110,14 +110,14 @@ train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=bs, shuffle=False)
 
 # model = Unet(1, 1).to(device)
-model = GRFB(1, 1).to(device)
+model = GRFBUNet(1, 1).to(device)
 
-model_path = os.path.join(model_dir, 'lastmodel')
-if os.path.exists(model_path):
-    model.load_state_dict(torch.load(model_path, map_location='cpu'))
-    print(f"Model loaded from {model_path}")
-else:
-    print(f"No model found at {model_path}, skipping load.")
+# model_path = os.path.join(model_dir, 'lastmodel')
+# if os.path.exists(model_path):
+#     model.load_state_dict(torch.load(model_path, map_location='cpu'))
+#     print(f"Model loaded from {model_path}")
+# else:
+#     print(f"No model found at {model_path}, skipping load.")
 criterion = torch.nn.BCELoss()
 optimizer = optim.Adam(model.parameters())
 
