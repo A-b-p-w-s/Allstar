@@ -51,7 +51,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # model_dir=r'C:\Users\allstar\Desktop\ves'
 
 data_dir=r'C:\Users\allstar\nnUNet_raw\Dataset008_HepaticVessel\origin'
-model_dir=r'C:\Users\allstar\nnUNet_raw'
+model_dir=r'C:\Users\Administrator\Desktop\ves'
 
 # 图像增强只用于训练集
 class SequentialRotationTransform:
@@ -92,8 +92,8 @@ writer = SummaryWriter(log_dir='seg_logs\seg')
 # images_root = r'C:\Users\allstar\Desktop\ves\imagesTr_dicom'
 # labels_root = r'C:\Users\allstar\Desktop\ves\labelsTr_dicom'
 
-images_root = r'C:\Users\allstar\nnUNet_raw\Dataset008_HepaticVessel\imagesTr_dicom'
-labels_root = r'C:\Users\allstar\nnUNet_raw\Dataset008_HepaticVessel\labelsTr_dicom'
+images_root = r'C:\Users\Administrator\Desktop\ves\imagesTr_dicom'
+labels_root = r'C:\Users\Administrator\Desktop\ves\labelsTr_dicom'
 venous_dataset = VesselDataset(
     images_root=images_root,
     labels_root=labels_root,
@@ -135,7 +135,7 @@ for epoch in range(1, num_epochs):
     epoch_dice = 0
     epoch_iou = 0
     epoch_loss = 0
-    for x, y in tqdm(train_loader):
+    for x, y in tqdm(train_loader,ncols=70):
         step += 1
         inputs = x.to(device)
         labels = y.to(device)

@@ -16,8 +16,8 @@ class VesselDataset(data.Dataset):
         for folder_name in os.listdir(images_root):
             image_folder_path = os.path.join(images_root, folder_name)
             label_folder_path = os.path.join(labels_root, folder_name)
-            print(image_folder_path)
-            print(label_folder_path)
+            # print(image_folder_path)
+            # print(label_folder_path)
 
             # 遍历 image_folder 中的文件
             for image_file in os.listdir(image_folder_path):
@@ -56,13 +56,13 @@ class VesselDataset(data.Dataset):
         img_array = self._load_dicom(img_path, self.hu_window)
         label_array = self._load_dicom(label_path)
 
-        img = Image.fromarray((img_array * 255).astype(np.uint8)).convert("L")
-        label = Image.fromarray(label_array.astype(np.uint8)).convert("L")
+        # img = Image.fromarray((img_array * 255).astype(np.uint8)).convert("L")
+        # label = Image.fromarray(label_array.astype(np.uint8)).convert("L")
 
         if self.transform:
-            img = self.transform(img)
+            img = self.transform(img_array)
         if self.target_transform:
-            label = self.target_transform(label)
+            label = self.target_transform(label_array)
 
         return img, label
 
