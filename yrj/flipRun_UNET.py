@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import torchvision.transforms.functional as TF
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -15,10 +15,10 @@ import torchvision.transforms.functional as F
 
 import os
 from tqdm import tqdm
-from GRFBUNet import *
-# from model import *
+from model import *
 from newDataset import *
 
+# UNET加SEBLOCK 空洞系数
 def dice_coefficient(pred, target, smooth=1e-5):
     pred = pred.view(-1)
     target = target.view(-1)
@@ -47,7 +47,6 @@ set_seed(42)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# model_dir=r'C:\Users\allstar\Desktop\ves'
 model_dir=r'C:\Users\Administrator\Desktop\ves'
 
 # 图像增强只用于训练集
@@ -59,7 +58,7 @@ class SequentialRotationTransform:
     def __call__(self, img):
         angle = self.angles[self.index]
         self.index = (self.index + 1) % len(self.angles)  # 依次循环使用角度
-        return TF.rotate(img, angle)
+        return F.rotate(img, angle)
 
 # 定义 x 和 y 的 transform
 x_transform = transforms.Compose([
@@ -86,9 +85,6 @@ bs = 8
 
 writer = SummaryWriter(log_dir='seg_logs\seg')
 
-# images_root = r'C:\Users\allstar\Desktop\ves\imagesTr_dicom'
-# labels_root = r'C:\Users\allstar\Desktop\ves\labelsTr_dicom'
-
 images_root = r'C:\Users\Administrator\Desktop\ves\imagesTr_dicom'
 labels_root = r'C:\Users\Administrator\Desktop\ves\labelsTr_dicom'
 venous_dataset = VesselDataset(
@@ -106,15 +102,8 @@ train_dataset, test_dataset = random_split(venous_dataset, [train_size, test_siz
 train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=bs, shuffle=False)
 
-# model = Unet(1, 1).to(device)
-model = GRFBUNet(1, 1).to(device)
-
-# model_path = os.path.join(model_dir, 'lastmodel')
-# if os.path.exists(model_path):
-#     model.load_state_dict(torch.load(model_path, map_location='cpu'))
-#     print(f"Model loaded from {model_path}")
-# else:
-#     print(f"No model found at {model_path}, skipping load.")
+model = Unet(1, 1).to(device)
+model.load_state_dict(torch.load(os.path.join(model_dir, 'lastmodel'), map_location='cpu'))
 criterion = torch.nn.BCELoss()
 optimizer = optim.Adam(model.parameters())
 
@@ -132,7 +121,7 @@ for epoch in range(1, num_epochs):
     epoch_dice = 0
     epoch_iou = 0
     epoch_loss = 0
-    for x, y in tqdm(train_loader,ncols=70):
+    for x, y in tqdm(train_loader):
         step += 1
         inputs = x.to(device)
         labels = y.to(device)
