@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import random
-
 from torch.utils.data import DataLoader, random_split
 from torchvision import transforms
 from torch.utils.tensorboard import SummaryWriter
@@ -107,7 +106,7 @@ train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=bs, shuffle=False)
 
 # model = Unet(1, 1).to(device)
-model = GRFBUNet(1, 1).to(device)
+model = MultiResUNetAttention(1, 1).to(device)
 
 # model_path = os.path.join(model_dir, 'lastmodel')
 # if os.path.exists(model_path):
@@ -116,7 +115,15 @@ model = GRFBUNet(1, 1).to(device)
 # else:
 #     print(f"No model found at {model_path}, skipping load.")
 criterion = torch.nn.BCELoss()
-optimizer = optim.Adam(model.parameters())
+optimizer = optim.Adam(model.parameters(), lr=1e-3)  # 初始学习率 1e-3
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer, 
+    mode='max',  # 根据指标 test_dice 进行调整，越大越好
+    factor=0.5,  # 每次减少为原来的 50%
+    patience=10,  # 如果 10 个 epoch 没有提升，则调整学习率
+    verbose=True,  # 输出日志
+    min_lr=1e-6  # 最小学习率限制
+)
 
 bestscore = 0
 best_tot = 0
@@ -183,6 +190,12 @@ for epoch in range(1, num_epochs):
     writer.add_scalar(f'iou/test_iou', test_iou, epoch)
 
     print(f'  epoch:{epoch}/{num_epochs} test:     mdice{test_dice:0.3f} miou:{test_iou:0.3f}')
+
+     # 调整学习率
+    scheduler.step(test_dice)
+    current_lr = optimizer.param_groups[0]['lr']
+    writer.add_scalar('lr', current_lr, epoch)
+    print(f'  epoch:{epoch}/{num_epochs} current_lr:{current_lr:.6f}')
 
     # 保存日志
     train_logs.append({
