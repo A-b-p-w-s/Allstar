@@ -1,18 +1,8 @@
-# import nibabel as nib
+"""
+计算体像距离代码
+用于计算CT图像中各个器官的真实体积
 
-
-# # 加载.nii.gz文件
-# image_path = r'C:\Users\Administrator\Desktop\test\segmentation-325.nii'
-# image_obj = nib.load(image_path)
-
-# # 获取体素尺寸
-# pixdim = image_obj.header['pixdim']
-
-# # 打印每个轴的体素尺寸
-# print(f'X轴体素尺寸: {pixdim[1]} mm')
-# print(f'Y轴体素尺寸: {pixdim[2]} mm')
-# print(f'Z轴体素尺寸: {pixdim[3]} mm')
-
+"""
 
 import nibabel as nib
 import numpy as np

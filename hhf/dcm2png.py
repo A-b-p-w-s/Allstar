@@ -1,3 +1,7 @@
+"""
+dcm数据转换成png的代码    
+用于将dcm数据转换成png数据
+"""
 # import os
 # import pydicom
 # from PIL import Image
@@ -56,6 +60,23 @@ import os
 import pydicom
 from PIL import Image
 import numpy as np
+import cv2
+
+
+# windowing 函数
+def windowing(img, window_width, window_center):
+    minwindow = float(window_center) - 0.5 * float(window_width)
+    new_img = (img - minwindow) / float(window_width)
+    
+     # 将归一化后的图像缩放到0到255
+    new_img = new_img * 255
+    
+    # 确保结果在0到255之间
+    new_img = np.clip(new_img, 0, 255)
+    
+    # 转换为整数类型
+    new_img = new_img.astype(np.uint8)
+    return new_img
 
 def save_dcm_as_png(dcm_folder, output_folder):
     # 创建输出文件夹，如果不存在的话
@@ -92,22 +113,47 @@ def save_dcm_as_png(dcm_folder, output_folder):
         img_array[img_array>2429] = 2429
         
         # 获取DICOM图像的窗宽和窗位，用于归一化
-        max_value = np.max(img_array)
-        min_value = np.min(img_array)
+        
+        # max_value = np.max(img_array)
+        # min_value = np.min(img_array)
     
-        window_level = (max_value+min_value)/2
-        window_width = abs(max_value-window_level)
+        # window_level = (max_value+min_value)/2
+        # window_width = abs(max_value-window_level)
     
     
         # 归一化到0-255范围
-        img_array_normalized = np.clip((img_array - window_level) / (window_width / 255), 0, 255)
+        # img_array_normalized = np.clip((img_array - window_level) / (window_width / 255), 0, 255)
+        
+        img_array_normalized = windowing(img_array, 400, 30)
+                 
+        contours, _ = cv2.findContours(img_array_normalized, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        # 初始化最大外接矩形的变量
+        max_area = 0
+        max_rect = None
+
+        # 遍历所有轮廓
+        for contour in contours:
+            # 计算轮廓的外接矩形
+            x, y, w, h = cv2.boundingRect(contour)
+            # 计算矩形的面积
+            area = w * h
+            # 更新最大外接矩形
+            if area > max_area:
+                max_area = area
+                max_rect = (x, y, w, h)
+
+        # 绘制最大外接矩形
+        if max_rect:
+            x, y, w, h = max_rect
+            img_array_normalized = img_array_normalized[y:y+h, x:x+w]
         
 
-        # 如果数据是 int16 类型，转换为 uint8 类型进行保存
-        img_array_normalized = img_array_normalized.astype(np.uint8)
 
         # 将图像数据转换为 PIL 图像
         img = Image.fromarray(img_array_normalized)
+        
+    
 
         # 保存为 PNG 文件
         output_path = os.path.join(output_folder, f"ct_{i+1}.png")
@@ -115,8 +161,8 @@ def save_dcm_as_png(dcm_folder, output_folder):
         print(f"保存 {output_path}")
 
 # 使用示例
-dcm_folder = r'C:\Users\allstar\Desktop\aaaa\DICOM (2)\nii\SE5'  # DICOM 文件夹路径
-output_folder = r'C:\Users\allstar\Desktop\aaaa\ct_png'  # 输出文件夹路径
+dcm_folder = r'D:\TJ_DATA_CT\DICOM\PA0\ST0\SE3'  # DICOM 文件夹路径
+output_folder = r'D:\TJ_data_T\ct_png'  # 输出文件夹路径
 
 save_dcm_as_png(dcm_folder, output_folder)
 

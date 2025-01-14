@@ -1,3 +1,9 @@
+"""
+优化三维重建数据的代码
+边缘检测提取切片外轮廓减少重建的点
+
+"""
+
 import nibabel as nib
 import numpy as np
 import os

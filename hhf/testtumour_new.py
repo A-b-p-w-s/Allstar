@@ -1,3 +1,9 @@
+"""
+计算体模肿瘤中心的代码
+用于计算体模CT手动肿瘤标注数据的，手动标注的肿瘤中心
+
+"""
+
 import nibabel as nib
 import cv2
 import numpy as np

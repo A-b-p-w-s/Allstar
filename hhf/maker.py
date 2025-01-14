@@ -1,3 +1,8 @@
+"""
+计算CT数据的光学小球中心的代码
+用于计算体模CT手动光学小球标注数据的，手动标注的光学小球中心
+
+"""
 # import nibabel as nib
 # import cv2
 # import numpy as np
@@ -162,10 +167,10 @@ for i in range(data.shape[slice_axis]):
             
     
     
-    # # 显示结果
-    # cv2.imshow('Detected Circles', image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    # 显示结果
+    cv2.imshow('Detected Circles', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs

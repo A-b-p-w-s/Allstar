@@ -1,3 +1,7 @@
+"""
+将CTA数据分成4个文件夹的代码
+用于将CTA数据分成4个文件夹剔除无效切片数据
+"""
 import SimpleITK as sitk
 import os
 from tqdm import tqdm

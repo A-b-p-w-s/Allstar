@@ -1,3 +1,7 @@
+"""
+创建nnunet所需要的json文件代码
+用于生成nnunet，dataset中所需要的json文件
+"""
 import json
 
 # 创建一个字典，这将是我们的JSON数据

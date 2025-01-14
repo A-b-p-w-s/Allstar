@@ -1,3 +1,7 @@
+"""
+dcm数据转换成nii的代码    
+用于将dcm数据转换成nii数据
+"""
 import SimpleITK as sitk
 import os
 from tqdm import tqdm
@@ -46,7 +50,7 @@ def dcm2nii(dcm_file, nifti_output_dir):
 
 
 if __name__ == "__main__":
-    dcm_file = r'C:\Users\allstar\Desktop\213'
+    dcm_file = r'C:\Users\allstar\Desktop\213\a'
     nifti_output_dir = r'C:\Users\allstar\Desktop\aaaaa'
     
     dcm2nii(dcm_file, nifti_output_dir)

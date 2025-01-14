@@ -1,3 +1,8 @@
+"""
+nii数据转换成dcm数据的代码
+用于将nii数据转换成dcm数据
+
+"""
 import SimpleITK as sitk
 import os
 from tqdm import tqdm

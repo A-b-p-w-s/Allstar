@@ -1,9 +1,16 @@
+"""
+nii文件生成stl代码
+用于将nii文件生成stl文件
+
+"""
+
+
 import vtk
 import numpy as np
 
 # 读取.nii.gz文件并转换为numpy数组
 reader = vtk.vtkNIFTIImageReader()
-reader.SetFileName(r"C:\Users\allstar\Desktop\stl\liver\ct_001_1.2.3.4.5_0000.nii.gz")
+reader.SetFileName(r"C:\Users\allstar\Desktop\aaaaa\liver-213\ct_213_0000.nii.gz")
 reader.Update()
 imageData = reader.GetOutput()
 
@@ -22,7 +29,7 @@ smoothFilter.Update()
 
 # 保存平滑后的模型
 writer = vtk.vtkSTLWriter()
-writer.SetFileName(r"C:\Users\allstar\Desktop\stl\liver\liver.stl")
+writer.SetFileName(r"C:\Users\allstar\Desktop\aaaaa\liver.stl")
 writer.SetInputConnection(smoothFilter.GetOutputPort())
 writer.Write()
 print("completed")

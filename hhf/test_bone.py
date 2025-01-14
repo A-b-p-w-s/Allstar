@@ -1,3 +1,7 @@
+"""
+用于窗位窗宽分割骨骼的代码
+
+"""
 import nibabel as nib
 
 # 加载.nii.gz文件
