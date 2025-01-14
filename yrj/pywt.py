@@ -10,14 +10,16 @@ def load_dicom(file_path):
     return img, ds  # 返回像素数据和 DICOM 对象以便保存
 
 # 小波去噪
-def wavelet_denoise(img, wavelet='db1', level=2, threshold=20):
+def wavelet_denoise(img, wavelet='db1', level=3, threshold=20):
     # 小波分解
     coeffs = pywt.wavedec2(img, wavelet=wavelet, level=level)
     # 阈值处理
     coeffs_denoised = []
+    # 自适应阈值策略，基于小波分解的系数计算阈值
+    threshold = np.median(np.abs(coeff)) / 0.6745 * np.sqrt(2 * np.log(img.size))
     for coeff in coeffs:
         if isinstance(coeff, tuple):
-            coeffs_denoised.append(tuple(pywt.threshold(c, threshold, mode='soft') for c in coeff))
+            coeffs_denoised.append(tuple(pywt.threshold(c, threshold, mode='hard') for c in coeff))
         else:
             coeffs_denoised.append(coeff)
     # 小波重构
